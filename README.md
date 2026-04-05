@@ -33,7 +33,7 @@ backend/           → FastAPI server with health endpoint and DB connectivity
 
 ## Data model (seeded)
 
-The seed data provides a small, curated dataset that tells a workshop story — not a production-scale fixture.
+The seed data provides a small, curated dataset that tells a workshop story — not a production-scale fixture. Five tables are pre-seeded in the database:
 
 - **Campaigns** — mix of healthy, unhealthy, and ambiguous ad campaigns
 - **Campaign Health** — time-series snapshots with metrics like CTR, viewability, spend, and pacing
@@ -41,16 +41,19 @@ The seed data provides a small, curated dataset that tells a workshop story — 
 - **Investigation Evidence** — typed evidence items (metrics, delivery notes, operator notes, QA checks)
 - **AI Runs** — lightweight log of model usage tied to investigations (for economics discussion)
 
+The backend currently maps only `campaigns` and `campaign_health` as ORM models. The remaining models, schemas, and API routes will be built during the workshop.
+
 ## What we'll build together
 
 Over the course of the workshop, this skeleton becomes a working product while demonstrating Claude Code workflows:
 
 1. Surface campaign health data and make a first visible change
-2. Implement campaign detail pages and investigation entry points
-3. Build the full investigation creation and evidence capture flow
-4. Add investigation status progression (New → Investigating → Needs Action → Resolved)
-5. Surface AI usage and recommendation data
-6. Layer in shared repo standards, skills, hooks, and automation
+2. Add the AI usage model scaffold and discuss token economics
+3. Build a campaign detail page with investigation entry point
+4. Implement investigation creation, evidence capture, and persistence end to end
+5. Add investigation status progression (New → Investigating → Needs Action → Resolved)
+6. Surface AI usage and recommendation data
+7. Layer in shared repo standards, skills, hooks, and automation
 
 ## Getting started
 
