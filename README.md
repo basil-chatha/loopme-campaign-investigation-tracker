@@ -98,7 +98,7 @@ Opens at `http://localhost:5173`. The Vite dev server proxies `/api` requests to
 
 ```bash
 cd backend
-pytest
+uv run pytest
 ```
 
 ## Workshop context

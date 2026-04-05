@@ -8,77 +8,76 @@ export default function CampaignList() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await getCampaigns();
-        setCampaigns(data);
-        setError(null);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch campaigns');
-        setCampaigns([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    getCampaigns()
+      .then((data) => { setCampaigns(data); setError(null); })
+      .catch((err) => { setError(err.message); setCampaigns([]); })
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return <div className="loading">Loading campaigns...</div>;
-  }
-
-  if (error) {
-    return <div className="error">Error: {error}</div>;
-  }
+  if (loading) return <p className="text-muted-foreground">Loading campaigns…</p>;
+  if (error) return <p className="text-destructive">Error: {error}</p>;
 
   return (
     <div>
-      <h2 className="page-title">Campaigns</h2>
+      <h2 className="mb-6 text-2xl font-semibold">Campaigns</h2>
 
-      {campaigns.length === 0 ? (
-        <div className="loading">No campaigns found.</div>
-      ) : (
-        <div className="campaign-list">
-          <table className="campaign-table">
-            <thead>
+      <div className="overflow-hidden rounded-lg border">
+        <table className="w-full text-sm">
+          <thead className="border-b bg-muted/50">
+            <tr>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Code</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Advertiser</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Objective</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Channel</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Budget</th>
+            </tr>
+          </thead>
+          <tbody>
+            {campaigns.length === 0 ? (
               <tr>
-                <th>Campaign Code</th>
-                <th>Name</th>
-                <th>Advertiser</th>
-                <th>Status</th>
-                <th>Objective</th>
-                <th>Channel</th>
-                <th>Budget (USD)</th>
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                  No campaigns found.
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {campaigns.map((campaign) => (
-                <tr key={campaign.id}>
-                  <td>
-                    <Link to={`/campaigns/${campaign.id}`} className="campaign-row-link">
-                      {campaign.campaign_code}
-                    </Link>
-                  </td>
-                  <td>{campaign.name}</td>
-                  <td>{campaign.advertiser}</td>
-                  <td>
-                    <span
-                      className={`status-badge ${campaign.status.toLowerCase()}`}
-                    >
-                      {campaign.status}
-                    </span>
-                  </td>
-                  <td>{campaign.objective}</td>
-                  <td>{campaign.channel}</td>
-                  <td>${campaign.budget_usd?.toLocaleString() || '0'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ) : campaigns.map((c) => (
+              <tr key={c.id} className="border-b last:border-0 hover:bg-muted/50">
+                <td className="px-4 py-3">
+                  <Link to={`/campaigns/${c.id}`} className="font-medium text-primary underline-offset-4 hover:underline">
+                    {c.campaign_code}
+                  </Link>
+                </td>
+                <td className="px-4 py-3">{c.name}</td>
+                <td className="px-4 py-3 text-muted-foreground">{c.advertiser}</td>
+                <td className="px-4 py-3">
+                  <StatusBadge status={c.status} />
+                </td>
+                <td className="px-4 py-3">{c.objective}</td>
+                <td className="px-4 py-3">{c.channel}</td>
+                <td className="px-4 py-3 text-right tabular-nums">
+                  ${c.budget_usd?.toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
+  );
+}
+
+const STATUS_STYLES = {
+  Active: 'bg-green-50 text-green-700',
+  Paused: 'bg-amber-50 text-amber-700',
+  Completed: 'bg-gray-100 text-gray-600',
+};
+const DEFAULT_STATUS_STYLE = 'bg-gray-100 text-gray-600';
+
+function StatusBadge({ status }) {
+  return (
+    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[status] || DEFAULT_STATUS_STYLE}`}>
+      {status}
+    </span>
   );
 }
