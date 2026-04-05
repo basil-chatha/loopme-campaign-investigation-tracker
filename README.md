@@ -12,14 +12,14 @@ The finished product lets an operator browse campaigns, spot health issues, open
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Angular |
+| Frontend | React |
 | Backend | FastAPI (Python) |
 | Database | PostgreSQL (Supabase) |
 
 ## Repo structure
 
 ```
-frontend/          → Angular app shell with routing and baseline styling
+frontend/          → React app shell with routing and baseline styling
 backend/           → FastAPI server with health endpoint and DB connectivity
 ```
 
