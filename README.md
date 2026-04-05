@@ -12,7 +12,7 @@ The finished product lets an operator browse campaigns, spot health issues, open
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React |
+| Frontend | React, Tailwind CSS, shadcn/ui |
 | Backend | FastAPI (Python) |
 | Database | PostgreSQL (Supabase) |
 
