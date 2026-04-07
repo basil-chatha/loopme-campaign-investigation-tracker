@@ -86,6 +86,18 @@ export async function updateInvestigationStatus(id, status, resolutionSummary) {
   return fetchApiMutate('PATCH', `/investigations/${id}/status`, body);
 }
 
-// TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Add getAiRuns(investigationId) function.
-//   Fetches AI run records from GET /investigations/{id}/ai-runs.
-//   Surfaces AI usage data on the investigation detail view.
+/**
+ * Fetch a single investigation by ID.
+ * @param {string} id — Investigation ID
+ */
+export async function getInvestigation(id) {
+  return fetchApi(`/investigations/${id}`);
+}
+
+/**
+ * Fetch AI run records for an investigation.
+ * @param {string} investigationId — Investigation ID
+ */
+export async function getAiRuns(investigationId) {
+  return fetchApi(`/ai-runs/investigation/${investigationId}`);
+}

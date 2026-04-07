@@ -142,8 +142,3 @@ class AiRunOut(BaseModel):
     prompt_summary: Optional[str] = None
     recommendation_summary: Optional[str] = None
     created_at: datetime
-
-
-# TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Add AiRunCreate Pydantic schema (if needed).
-#   Fields for logging a new AI run. May be needed when surfacing the AI usage card
-#   on the investigation detail page and closing the economics loop.

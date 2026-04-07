@@ -104,6 +104,18 @@ def test_investigation_status_update():
     assert response.status_code in [200, 404, 422, 503]
 
 
+def test_investigation_detail_endpoint_exists():
+    """Test that GET /investigations/{id} is routable."""
+    response = client.get("/investigations/inv_000000000000")
+    assert response.status_code in [200, 404, 503]
+
+
+def test_ai_runs_for_investigation_endpoint_exists():
+    """Test that GET /ai-runs/investigation/{id} is routable."""
+    response = client.get("/ai-runs/investigation/inv_000000000000")
+    assert response.status_code in [200, 503]
+
+
 def test_investigation_reviewer_agent_exists():
     """Test that the investigation-reviewer agent definition exists."""
     agent_path = os.path.join(

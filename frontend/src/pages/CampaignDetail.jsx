@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getCampaign, createInvestigation, getInvestigations, updateInvestigationStatus } from '../api/client';
 import { Badge } from '@/components/ui/badge';
-
-// TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Import getAiRuns from '../api/client'
-//   for the AI usage card on the investigation detail view.
+import { Field, fmtDate, StyledBadge, NEXT_STATUS, INVESTIGATION_STATUS_STYLES, SEVERITY_STYLES } from '../lib/investigation.jsx';
 
 export default function CampaignDetail() {
   const { id } = useParams();
@@ -281,7 +279,7 @@ export default function CampaignDetail() {
                 <StyledBadge value={inv.severity} styles={SEVERITY_STYLES} />
                 <span className="text-xs text-muted-foreground ml-auto">{fmtDate(inv.opened_at)}</span>
               </div>
-              <p className="text-sm font-medium">{inv.question}</p>
+              <Link to={`/investigations/${inv.id}`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">{inv.question}</Link>
               <p className="text-sm text-muted-foreground mt-1">{inv.hypothesis}</p>
               {inv.owner_name && (
                 <p className="text-xs text-muted-foreground mt-2">Owner: {inv.owner_name}</p>
@@ -303,24 +301,8 @@ export default function CampaignDetail() {
         </div>
       )}
 
-      {/* TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Add an AI usage card or
-          recommendation note section on the investigation detail view. */}
     </div>
   );
-}
-
-function Field({ label, value }) {
-  return (
-    <div>
-      <span className="font-medium text-muted-foreground">{label}</span>
-      <span className="mt-0.5 block">{value || '-'}</span>
-    </div>
-  );
-}
-
-function fmtDate(iso) {
-  if (!iso) return '-';
-  return new Date(iso).toLocaleDateString();
 }
 
 function pct(value) {
@@ -328,38 +310,8 @@ function pct(value) {
   return `${value.toFixed(1)}%`;
 }
 
-const DEFAULT_BADGE_STYLE = 'bg-gray-100 text-gray-600';
-
-function StyledBadge({ value, styles }) {
-  return (
-    <Badge className={`font-medium ${styles[value] || DEFAULT_BADGE_STYLE}`}>
-      {value}
-    </Badge>
-  );
-}
-
 const STATUS_STYLES = {
   Active: 'bg-green-50 text-green-700',
   Paused: 'bg-amber-50 text-amber-700',
   Completed: 'bg-gray-100 text-gray-600',
-};
-
-const NEXT_STATUS = {
-  'New': 'Investigating',
-  'Investigating': 'Needs Action',
-  'Needs Action': 'Resolved',
-};
-
-const INVESTIGATION_STATUS_STYLES = {
-  New: 'bg-blue-50 text-blue-700',
-  Investigating: 'bg-amber-50 text-amber-700',
-  'Needs Action': 'bg-red-50 text-red-700',
-  Resolved: 'bg-green-50 text-green-700',
-};
-
-const SEVERITY_STYLES = {
-  Critical: 'bg-red-100 text-red-800',
-  High: 'bg-orange-50 text-orange-700',
-  Medium: 'bg-amber-50 text-amber-700',
-  Low: 'bg-gray-100 text-gray-600',
 };

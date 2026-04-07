@@ -70,6 +70,12 @@
 - Blocked commands exit with code 2; the reason is fed back to Claude as context.
 - Hook changes require a session restart to take effect.
 
+## Production rollout
+
+- The production rollout plan lives in `docs/production-rollout.md`.
+- It defines the minimum viable team setup, ownership model, 30/60/90-day rollout, KPI review cadence, and decision gates.
+- Before expanding beyond the pilot, confirm all decision gate criteria in the rollout plan are met.
+
 ## What stays local (not in this repo)
 
 - `.env` files with database URLs, API keys, and secrets

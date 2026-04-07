@@ -1,10 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import CampaignList from './pages/CampaignList';
 import CampaignDetail from './pages/CampaignDetail';
-
-// TODO [Step 5 — Day 1 / Module 05 — Workflow Deep Dive]: If investigations get their own
-//   dedicated page (e.g. InvestigationDetail), import it here and add a route below.
-//   Example: import InvestigationDetail from './pages/InvestigationDetail';
+import InvestigationDetail from './pages/InvestigationDetail';
 
 export default function App() {
   return (
@@ -24,9 +21,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<CampaignList />} />
           <Route path="/campaigns/:id" element={<CampaignDetail />} />
-          {/* TODO [Step 5 — Day 1 / Module 05 — Workflow Deep Dive]: Add a route for
-              investigation detail if it becomes a separate page, e.g.:
-              <Route path="/investigations/:id" element={<InvestigationDetail />} /> */}
+          <Route path="/investigations/:id" element={<InvestigationDetail />} />
         </Routes>
       </main>
     </div>
