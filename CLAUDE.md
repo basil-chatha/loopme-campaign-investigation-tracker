@@ -16,11 +16,27 @@
 - Frontend pages live in `frontend/src/pages/`; shared UI components in `frontend/src/components/`.
 - API calls from the frontend go through `frontend/src/api/client.js`.
 
+## Entity ID and creation patterns
+
+- New entity IDs follow the pattern `prefix_` + 12 hex chars from uuid4: e.g., `inv_`, `ev_`.
+- Timestamps default to `datetime.utcnow()` at creation; `updated_at` uses `onupdate=datetime.utcnow`.
+- New routers must be registered in `backend/app/main.py` via `app.include_router(router)`.
+
 ## Testing
 
-- Run backend tests: `cd backend && pytest`
-- Tests live in `backend/tests/`.
-- New endpoints should have at least a basic connectivity test.
+- Run backend tests: `cd backend && uv run pytest`
+- Tests live in `backend/tests/` and use `TestClient(app)` directly (no DB fixtures).
+- Connectivity tests accept status codes `[200, 404, 503]` — 503 means DATABASE_URL is unset, which is valid in CI.
+- New endpoints need at least a basic connectivity test.
+
+## Frontend patterns
+
+- Data fetching uses `useEffect` with a stale-check cleanup flag and `loading`/`error`/`data` state triple.
+- Parallel fetches use `Promise.all` (see `CampaignDetail.jsx`).
+
+## Shared commands
+
+- `/investigation-plan <description>` — plans an investigation-related change by reading domain files, identifying affected code, proposing an approach, and flagging risks.
 
 ## Approval boundaries
 
