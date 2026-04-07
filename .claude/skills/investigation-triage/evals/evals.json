@@ -1,0 +1,47 @@
+{
+  "skill_name": "investigation-triage",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Triage investigation inv_3001 — it's a new Creative Fatigue investigation on campaign cmp_1001. Check if it has enough evidence to move forward.",
+      "expected_output": "A triage report that identifies inv_3001 as New/Creative Fatigue with Medium severity. Should flag that it only has 2 Metric evidence items but no Operator Note showing active engagement, and suggest the investigation needs an operator to review before advancing to Investigating status.",
+      "files": [],
+      "expectations": [
+        "The report identifies the investigation status as New",
+        "The report identifies the issue type as Creative Fatigue",
+        "The report flags the absence of an Operator Note",
+        "The report includes a Field Quality section assessing question, hypothesis, next_action, and owner",
+        "The report includes an Evidence Completeness section",
+        "The report recommends a specific next action"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Is investigation inv_3003 ready to be resolved? It's the low viewability issue on campaign cmp_1002 that's currently in Needs Action status with Critical severity.",
+      "expected_output": "A triage report showing inv_3003 is in Needs Action status with a Metric, QA Check, and Recommendation as evidence. Should note that the evidence profile is complete for Needs Action status but the investigation is not yet ready for Resolved because resolution_summary is not populated and resolved_at is not set.",
+      "files": [],
+      "expectations": [
+        "The report identifies the investigation status as Needs Action",
+        "The report identifies the severity as Critical",
+        "The report notes the investigation has a Recommendation evidence item",
+        "The report flags that resolution_summary is missing or not yet populated",
+        "The report does not recommend resolving the investigation yet",
+        "The output follows the structured triage report format"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review the quality of investigation inv_3005 — the resolved Data Discrepancy investigation. Is the resolution well-documented?",
+      "expected_output": "A triage report confirming inv_3005 is Resolved with Low severity. Should verify that resolution_summary is populated, resolved_at is set, and evidence includes a Metric and QA Check. Should confirm the resolution is well-documented.",
+      "files": [],
+      "expectations": [
+        "The report identifies the investigation status as Resolved",
+        "The report confirms resolution_summary is present",
+        "The report confirms resolved_at timestamp exists",
+        "The report identifies evidence types present (Metric, QA Check)",
+        "The report gives a positive assessment of the resolution documentation",
+        "The output follows the structured triage report format"
+      ]
+    }
+  ]
+}

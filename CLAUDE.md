@@ -38,6 +38,10 @@
 
 - `/investigation-plan <description>` — plans an investigation-related change by reading domain files, identifying affected code, proposing an approach, and flagging risks.
 
+## Shared skills
+
+- `investigation-triage` — triage a campaign investigation: review field quality, evidence completeness, status appropriateness, and suggest next action. Read-only.
+
 ## Approval boundaries
 
 - Any schema or migration change requires explicit human approval.
