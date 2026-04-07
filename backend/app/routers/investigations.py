@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Investigation, Campaign
-from app.schemas import InvestigationCreate, InvestigationOut
+from app.schemas import InvestigationCreate, InvestigationOut, InvestigationStatusUpdate
 
 router = APIRouter(prefix="/investigations", tags=["investigations"])
 
@@ -57,3 +57,41 @@ def list_investigations(campaign_id: Optional[str] = None, db: Session = Depends
     if campaign_id:
         query = query.filter(Investigation.campaign_id == campaign_id)
     return query.order_by(Investigation.opened_at.desc()).all()
+
+
+VALID_TRANSITIONS = {
+    "New": "Investigating",
+    "Investigating": "Needs Action",
+    "Needs Action": "Resolved",
+}
+
+
+@router.patch("/{investigation_id}/status", response_model=InvestigationOut)
+def update_investigation_status(
+    investigation_id: str,
+    payload: InvestigationStatusUpdate,
+    db: Session = Depends(get_db),
+):
+    """Update investigation status with forward-only progression."""
+    investigation = db.query(Investigation).filter(Investigation.id == investigation_id).first()
+    if not investigation:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    allowed = VALID_TRANSITIONS.get(investigation.status)
+    if allowed != payload.status:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Cannot transition from '{investigation.status}' to '{payload.status}'",
+        )
+
+    now = datetime.utcnow()
+    investigation.status = payload.status
+    investigation.updated_at = now
+
+    if payload.status == "Resolved":
+        investigation.resolved_at = now
+        investigation.resolution_summary = payload.resolution_summary
+
+    db.commit()
+    db.refresh(investigation)
+    return investigation

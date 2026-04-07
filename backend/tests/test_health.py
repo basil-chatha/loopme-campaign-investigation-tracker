@@ -95,9 +95,12 @@ def test_campaign_investigations_endpoint_exists():
     assert response.status_code in [200, 404, 503]
 
 
-# TODO [Step 10 — Day 2 / Module 03 — Parallel Execution]: Add test_investigation_status_update().
-#   Verify PATCH /investigations/{id}/status route exists and handles status transitions.
-#   This test can be developed as one of the parallel work streams (backend status logic).
+def test_investigation_status_update():
+    """Test that PATCH /investigations/{id}/status route exists and handles status transitions."""
+    response = client.patch("/investigations/inv_000000000000/status", json={
+        "status": "Investigating",
+    })
+    assert response.status_code in [200, 404, 422, 503]
 
 
 # TODO [Step 10 — Day 2 / Module 03 — Parallel Execution]: Consider creating a separate

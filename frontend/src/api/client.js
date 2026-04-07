@@ -50,12 +50,9 @@ export async function getCampaignHealth(campaignId) {
   return fetchApi(`/campaigns/${campaignId}/health`);
 }
 
-/**
- * POST wrapper — delegates to fetchApi with JSON body.
- */
-async function fetchApiPost(path, body) {
+async function fetchApiMutate(method, path, body) {
   return fetchApi(path, {
-    method: 'POST',
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
@@ -66,7 +63,7 @@ async function fetchApiPost(path, body) {
  * @param {object} data — Investigation form data
  */
 export async function createInvestigation(data) {
-  return fetchApiPost('/investigations', data);
+  return fetchApiMutate('POST', '/investigations', data);
 }
 
 /**
@@ -77,9 +74,17 @@ export async function getInvestigations(campaignId) {
   return fetchApi(`/campaigns/${campaignId}/investigations`);
 }
 
-// TODO [Step 10 — Day 2 / Module 03 — Parallel Execution]: Add updateInvestigationStatus(id, status, resolutionSummary) function.
-//   PATCHes /investigations/{id}/status to progress investigation status.
-//   Status flow: New → Investigating → Needs Action → Resolved.
+/**
+ * Update an investigation's status.
+ * @param {string} id — Investigation ID
+ * @param {string} status — New status value
+ * @param {string|null} resolutionSummary — Required when status is "Resolved"
+ */
+export async function updateInvestigationStatus(id, status, resolutionSummary) {
+  const body = { status };
+  if (resolutionSummary) body.resolution_summary = resolutionSummary;
+  return fetchApiMutate('PATCH', `/investigations/${id}/status`, body);
+}
 
 // TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Add getAiRuns(investigationId) function.
 //   Fetches AI run records from GET /investigations/{id}/ai-runs.

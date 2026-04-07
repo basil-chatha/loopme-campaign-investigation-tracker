@@ -7,7 +7,7 @@ during the workshop as new endpoints are added.
 """
 from datetime import datetime
 from typing import List, Literal, Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class CampaignOut(BaseModel):
@@ -112,10 +112,19 @@ class InvestigationEvidenceOut(BaseModel):
     sort_order: Optional[int] = None
 
 
-# TODO [Step 10 — Day 2 / Module 03 — Parallel Execution]: Add InvestigationStatusUpdate Pydantic schema.
-#   Fields: status (constrained to "New" | "Investigating" | "Needs Action" | "Resolved"),
-#   resolution_summary (optional, required when status is "Resolved").
-#   Used by the PATCH /investigations/{id}/status endpoint for status progression.
+InvestigationStatus = Literal["New", "Investigating", "Needs Action", "Resolved"]
+
+
+class InvestigationStatusUpdate(BaseModel):
+    """Request schema for updating investigation status."""
+    status: InvestigationStatus
+    resolution_summary: Optional[str] = None
+
+    @model_validator(mode="after")
+    def check_resolution_summary(self):
+        if self.status == "Resolved" and not self.resolution_summary:
+            raise ValueError("resolution_summary is required when status is Resolved")
+        return self
 
 
 class AiRunOut(BaseModel):

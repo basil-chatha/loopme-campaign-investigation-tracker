@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getCampaign, createInvestigation, getInvestigations } from '../api/client';
+import { getCampaign, createInvestigation, getInvestigations, updateInvestigationStatus } from '../api/client';
 import { Badge } from '@/components/ui/badge';
-
-// TODO [Step 10 — Day 2 / Module 03 — Parallel Execution]: Import updateInvestigationStatus
-//   from '../api/client' for the status progression UI.
 
 // TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Import getAiRuns from '../api/client'
 //   for the AI usage card on the investigation detail view.
@@ -25,6 +22,7 @@ export default function CampaignDetail() {
     next_action: '',
   });
   const [submitting, setSubmitting] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(null);
 
   useEffect(() => {
     let stale = false;
@@ -51,6 +49,23 @@ export default function CampaignDetail() {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleStatusChange = async (inv, nextStatus) => {
+    let resolutionSummary = null;
+    if (nextStatus === 'Resolved') {
+      resolutionSummary = prompt('Enter resolution summary:');
+      if (!resolutionSummary) return;
+    }
+    setUpdatingStatus(inv.id);
+    try {
+      const updated = await updateInvestigationStatus(inv.id, nextStatus, resolutionSummary);
+      setInvestigations((prev) => prev.map((i) => (i.id === inv.id ? updated : i)));
+    } catch (err) {
+      alert(`Failed to update status: ${err.message}`);
+    } finally {
+      setUpdatingStatus(null);
+    }
   };
 
   const handleCreateInvestigation = async (e) => {
@@ -271,13 +286,22 @@ export default function CampaignDetail() {
               {inv.owner_name && (
                 <p className="text-xs text-muted-foreground mt-2">Owner: {inv.owner_name}</p>
               )}
+              {inv.status === 'Resolved' && inv.resolution_summary && (
+                <p className="text-xs text-green-700 mt-1">Resolution: {inv.resolution_summary}</p>
+              )}
+              {NEXT_STATUS[inv.status] && (
+                <button
+                  className="mt-3 inline-flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium hover:bg-muted transition-colors disabled:opacity-50"
+                  onClick={() => handleStatusChange(inv, NEXT_STATUS[inv.status])}
+                  disabled={updatingStatus === inv.id}
+                >
+                  {updatingStatus === inv.id ? 'Updating...' : <>Mark as {NEXT_STATUS[inv.status]} &rarr;</>}
+                </button>
+              )}
             </div>
           ))}
         </div>
       )}
-
-      {/* TODO [Step 10 — Day 2 / Module 03 — Parallel Execution]: Add investigation status
-          progression UI. */}
 
       {/* TODO [Step 12 — Day 2 / Module 05 — Production Rollout]: Add an AI usage card or
           recommendation note section on the investigation detail view. */}
@@ -318,6 +342,12 @@ const STATUS_STYLES = {
   Active: 'bg-green-50 text-green-700',
   Paused: 'bg-amber-50 text-amber-700',
   Completed: 'bg-gray-100 text-gray-600',
+};
+
+const NEXT_STATUS = {
+  'New': 'Investigating',
+  'Investigating': 'Needs Action',
+  'Needs Action': 'Resolved',
 };
 
 const INVESTIGATION_STATUS_STYLES = {
