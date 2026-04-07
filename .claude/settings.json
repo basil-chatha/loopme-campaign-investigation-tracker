@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "/Users/basilchatha/Documents/tries/2026-03-30-realaization-claude-code-workshops/loopme"
+    ],
+    "allow": [
+      "mcp__claude_ai_Notion__notion-search",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-get-comments",
+      "mcp__claude_ai_Notion__notion-query-database-view",
+      "mcp__claude_ai_Notion__notion-query-meeting-notes",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git push *)",
+      "Bash(git branch *)",
+      "Bash(git stash *)",
+      "Bash(uv run *)",
+      "Bash(cd * && uv run *)",
+      "Bash(npm *)",
+      "Bash(npx *)"
+    ]
+  }
+}
