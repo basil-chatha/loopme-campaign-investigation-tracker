@@ -101,6 +101,46 @@ cd backend
 uv run pytest
 ```
 
+## MCP servers (Claude Code)
+
+This repo includes a `.mcp.json` that configures five MCP servers for use with Claude Code. After cloning, follow these steps to make sure they work.
+
+### 1. Install prerequisites
+
+- **Node.js** — required for `npx`, which launches the Playwright and Exa servers
+- **Codex CLI** — install globally: `npm install -g @openai/codex`
+
+### 2. Set environment variables
+
+Add these to your shell profile or a local `.env` file:
+
+```bash
+export OPENAI_API_KEY="your-openai-key"       # required by Codex CLI
+export EXA_API_KEY="your-exa-key"             # required by Exa MCP — get one at https://dashboard.exa.ai
+```
+
+### 3. Cloud MCPs (no local setup needed)
+
+**Atlassian** and **Linear** are remote HTTP servers. Claude Code will prompt you to authenticate via OAuth the first time you use them — no keys or installs required.
+
+### 4. Local MCPs (auto-launched by Claude Code)
+
+| Server | What it runs | Requires |
+|--------|-------------|----------|
+| Playwright | `npx @playwright/mcp@latest` | Node.js only |
+| Codex | `codex mcp-server` | Codex CLI installed globally + `OPENAI_API_KEY` |
+| Exa | `npx exa-mcp-server` | Node.js + `EXA_API_KEY` |
+
+### 5. Verify
+
+Open Claude Code in the project directory and run:
+
+```text
+/mcp
+```
+
+All five servers should show as connected.
+
 ## Workshop context
 
 This project is part of the [LoopMe Claude Code Masterclass](https://realaization.com). It is intentionally scoped to stay small, legible, and demo-friendly — not to be a production campaign ops platform.
