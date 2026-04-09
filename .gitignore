@@ -21,6 +21,9 @@ frontend/.vite/
 .env.local
 .env.*.local
 
+# Claude Code worktrees
+.claude/worktrees/
+
 # IDE
 .idea/
 .vscode/
